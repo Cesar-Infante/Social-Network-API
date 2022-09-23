@@ -21,4 +21,12 @@ const reactionScehma = new Schema(
             get: (date) => timeSince(date)
         },
     },
+    {
+        toJSON: {
+            getters: true,
+        },
+        id: false,
+    }
 );
+
+module.exports = reactionScehma;

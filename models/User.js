@@ -1,5 +1,5 @@
 // Defining Schema, Types
-const { Schema, Types } = require('mongoose')
+const { Schema, model } = require('mongoose')
 
 // Validation for email using regex
 const validateEmail = function (email) {
