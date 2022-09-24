@@ -50,5 +50,22 @@ module.exports = {
                     : res.status(200).json({ message: "User has been deleted!" })
             )
             .catch((err) => res.status(500).json(err))
+    },
+    addFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.body.userId },
+            { $push: { friends: req.params.friendId } },
+            { runValidators: true, new: true })
+            .then((user) => res.status(200).json(user))
+            .catch((err) => res.status(500).json(err))
+    },
+    removeFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $pull: { friends: req.params.friendId } },
+            { runValidators: true, new: true }
+        )
+        .then((user) => res.status(200).json(user))
+        .catch((err) => res.status(500).json(err))
     }
 }
