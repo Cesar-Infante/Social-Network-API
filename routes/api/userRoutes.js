@@ -13,20 +13,20 @@ const {
 router
     .route('/')
     .get(getAllUsers)
-    .post(createNewUser)
+    .post(createNewUser);
 
 
 router
     .route('/:userId')
     .get(getSingleId)
     .put(updateUserById)
-    .delete(deleteUserById)
+    .delete(deleteUserById);
 
 
 router
    .route('/friends/:friendId')
    .post(addFriend)
-   .delete(removeFriend)
+   .delete(removeFriend);
 
 
 module.exports = router;

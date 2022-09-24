@@ -60,6 +60,12 @@ module.exports = {
                     : res.status(200).json({ message: "thought has been deleted!" })
             )
             .catch((err) => res.status(500).json(err))
+    },
+    createReaction(req, res) {
+        
+    },
+    deleteReaction(req, res) {
+
     }
 }
 
