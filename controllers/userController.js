@@ -1,4 +1,4 @@
-const { User, Thought } = require('../models')
+const { User } = require('../models')
 
 module.exports = {
     // Get all users
@@ -16,7 +16,7 @@ module.exports = {
             })
             .populate({
                 path: 'friends',
-                select: '=__'
+                select: '=__v'
             })
             /* Excluding the version key from the response. */
             .select('-__v')
