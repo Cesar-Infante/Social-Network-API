@@ -23,20 +23,22 @@ module.exports = {
     createThought(req, res) {
         Thought.create(req.body)
             .then((thought) => {
-                User.findOneAndUpdate(
-                    { _id: req.params.userId },
-                    { $push: { thoughts: thought._id } },
+                return User.findOneAndUpdate(
+                    { _id: req.body.userId },
+                    { $addToSet: { thoughts: thought._id } },
                     { new: true }
                 )
-                    .then((user) =>
-                        !user
-                            ? res.status(404).json({ message: "No user found!" })
-                            : res.json(user)
-                    )
             })
+            .then((user) =>
+                !user
+                    ? res.status(404).json({
+                        message: 'No user with that ID',
+                    })
+                    : res.json('Thought created!')
+            )
             .catch((err) => {
                 console.log(err);
-                return res.status(500).json(err)
+                res.status(500).json(err);
             });
     },
     updateThought(req, res) {
@@ -47,7 +49,7 @@ module.exports = {
         )
             .then((thought) =>
                 !thought
-                    ? res.status(404).json({ message: "No thought found that matches taht id to update!" })
+                    ? res.status(404).json({ message: "No thought found that matches that id to update!" })
                     : res.json(thought)
             )
             .catch((err) => res.status(500).json(err));
@@ -69,7 +71,7 @@ module.exports = {
         )
             .then((thought) =>
                 !thought
-                    ? res.status(404).json({ message: 'No thought with this id!' })
+                    ? res.status(404).json({ message: 'No reaction with this id!' })
                     : res.status(200).json(thought)
             )
             .catch((err) => res.status(500).json(err))

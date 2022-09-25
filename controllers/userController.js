@@ -41,6 +41,15 @@ module.exports = {
             { $set: req.body },
             { runValidators: true, new: true }
         )
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'No user with this id!' })
+                    : res.status(200).json(user)
+            )
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json(err);
+            });
     },
     deleteUserById(req, res) {
         User.findOneAndDelete({ _id: req.params.userId })
@@ -53,19 +62,39 @@ module.exports = {
     },
     addFriend(req, res) {
         User.findOneAndUpdate(
-            { _id: req.body.userId },
-            { $push: { friends: req.params.friendId } },
-            { runValidators: true, new: true })
-            .then((user) => res.status(200).json(user))
-            .catch((err) => res.status(500).json(err))
+            { _id: req.params.userId }
+        )
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'No user with this id' })
+                    : User.findOneAndUpdate(
+                        { _id: req.params.userId },
+                        { $addToSet: { friends: req.params.friendId } },
+                        { new: true }
+                    )
+            )
+            .then((user) =>
+                !user
+                    ? res
+                        .status(404)
+                        .json({ message: 'No user with this id!' })
+                    : res.json({ message: 'Added friend!' })
+            )
+            .catch((err) => res.status(500).json(err));
     },
     removeFriend(req, res) {
-        User.findOneAndUpdate(
-            { _id: req.params.userId },
+        User.findOneAndUpdate({ _id: req.params.userId },
             { $pull: { friends: req.params.friendId } },
             { runValidators: true, new: true }
+
         )
-        .then((user) => res.status(200).json(user))
-        .catch((err) => res.status(500).json(err))
+            .then((user) =>
+                !user
+                    ? res
+                        .status(404)
+                        .json({ message: 'No user with this id!' })
+                    : res.json({ message: 'Removed friend' })
+            )
+            .catch((err) => res.status(500).json(err));
     }
-}
+};
